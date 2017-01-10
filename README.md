@@ -3,7 +3,7 @@ This repository is for learning MongoDb and studying MongoDB.
 
 I will be documenting all my steps to show you my learing curve.
 
-# 1. Setting up NodeJS with Express
+## 1. Setting up NodeJS with Express
 I just followed the basic [Express installation guide](http://expressjs.com/en/starter/installing.html).
 
 Setup the package.json
@@ -41,7 +41,7 @@ Run the app
 $ nodemon app
 ```
 
-# 2. Installing MongoDB
+## 2. Installing MongoDB
 I've tried a lot of ways to install MondgoDB and this is the one that works form me. In other attempts I got an error that the /data/db wasn't there or didn't have the right rights. Sinds i'm not very common with file permission and things like that, I tried it in oter way's for me the magical terminal command was: ``` mongod --dbpath=/data --port 27017 ```.
 
 I used [Monk](https://automattic.github.io/monk/docs/GETTING_STARTED.html) to setup the connection with MongoDB.
@@ -117,3 +117,22 @@ Make a loop in the index.ejs
 
 Now it should work!
 For further documentation on Monk: [Monk Documentation](https://automattic.github.io/monk/)
+
+## 3. Starting my project
+For my internship at [Occhio](https://occhio.nl) I keep track of everything I do in a day with a thing I call **Thing of the day**. This is just an ordenary textfile with al list of items i discovered every day.
+
+My idea is to print this list with a custum layout for every type of thing. For instance, there will be quotes, code, thoughts etc. All this data need to be stored in a DB where I will be useing MongoDB.
+Also, I must be able to add/edit the data, which means there needs to be a login with a users DB and a form to add/edit data.
+
+This will be the steps I think I need to take.
+
+1. Make a simple session login with Middleware
+2. Add the session login data to MongoDB
+3. Create an input form if you're logged in
+4. Store items in de MongoDB thrue the form
+5. render the MongoDB collection
+6. Add all the data to the MongoDB collection
+7. Make it possible to edit a file in the collection
+9. Style the basic pages
+8. Style the collection items per type
+9. DONE!
