@@ -5,7 +5,18 @@
     <link rel='stylesheet' href='/stylesheets/style.css' />
   </head>
   <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
+    <header>
+      <h1><%= title %></h1>
+      <p>Welcome to the <%= title %> test</p>
+    </header>
+    <main>
+      <ul>
+        <% for (var i = 0; i < data.length; i++) { %>
+            <li>
+              <p>Book: <strong><%= data[i].title %></strong>, has <strong><%= data[i].pages %></strong> pages</p>
+            </li>
+        <% } %>
+      </ul>
+    </main>
   </body>
 </html>
