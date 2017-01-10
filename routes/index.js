@@ -5,6 +5,7 @@ const monk = require('monk');
 const auth = require('./helpers/auth');
 
 /* GET home page. */
+// router.get('/', auth.login, function(req, res, next) {
 router.get('/', auth.login, function(req, res, next) {
 
   const url = 'localhost:27016';

@@ -23,7 +23,7 @@ $ npm install express-generator -g
 
 Setup Express with the EJS templating engine
 ```
-$ express --view=ej
+$ express --view=ejs
 ```
 
 Install the necessary NPM dependancies
@@ -141,4 +141,108 @@ This will be the steps I think I need to take.
 Install express-session
 ```
 $ npm install express-session --save
+```
+
+Create false userData in the app.js
+```
+app.use((req, res, next) => {
+  // Temp users data
+  const users = [{
+    email: 'martijnnieuwenhuizen@icloud.com',
+    pass: 'Wortels16',
+    name: {
+      first: 'Martijn',
+      last: 'Nieuwenhuizen'
+    },
+    userId: 1,
+    collectionId: '65r*8s4qj9x1'
+  },{
+    email: 'test@test.com',
+    pass: 'test',
+    name: {
+      first: 'test',
+      last: 'test'
+    },
+    userId: 2,
+    collectionId: 's59f0s=7'
+  }];
+
+  res.locals.users = users;
+  next();
+});
+```
+
+Create a session in the app.js
+```
+app.use(session({
+  resave: true,
+  saveUninitialized: true,
+  secret: 'E=MC2'
+}));
+```
+
+Check the auth in the app.js
+```
+app.use((req, res, next) => {
+  // If there's a session and a logedin user
+  if (req.session && req.session.userId) {
+    const user = res.locals.users.filter( usersD => usersD.userId === req.session.userId);
+    res.locals.user = user[0];
+    next();
+  } else {
+    next();
+  }
+});
+```
+
+Create an helper function in */routes/helpers/auth.js*
+```
+module.exports = {
+  login: function(req, res, next) {
+    if (req.session && !req.session.userId) {
+      // If there's no SessionID (so no logged in user), rederect
+      res.redirect('/users/login');
+    } else {
+      // Nothing on the hand, just continue
+      next();
+    }
+  }
+};
+```
+
+create a login form an handle the post in the routes/login
+```
+router.post('/', (req, res, next) => {
+  // Data got from post
+  const userEmail = req.body.email.toLowerCase();
+  const userPass = req.body.password;
+
+  // match the user
+  const users = res.locals.users;
+  const user = users.filter( machedUser => machedUser.email === userEmail);
+
+  // check if there's a match
+  if (user.length > 0) {
+    // If the password matches this user
+    if (user[0].pass === userPass) {
+      // set a session
+      const session = req.session;
+      session.view = 1;
+      session.userId = user[0].userId;
+
+      res.redirect('/');
+    } else {
+      // User email and password don't match
+      const content = {
+        title: 'MongoDB Test',
+        err: 'email and password doesnt match'
+      };
+
+      res.render('login', content);
+    }
+  } else {
+    // User email doesn't exists yet
+    res.redirect('/users/sign-up');
+  }
+});
 ```
