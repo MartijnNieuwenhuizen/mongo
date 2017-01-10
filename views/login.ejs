@@ -1,0 +1,16 @@
+<% include base/head %>
+<% include base/header %>
+
+  <main>
+    <form class="" action="/users/login" method="post" class="login">
+      <legend class="login--title">Login</legend>
+      <label for="email" class="login--label">Enter your email</label>
+      <input type="email" id="email" name="email" class="login--input">
+
+      <button type="submit" name="button">Login</button>
+    </form>
+    
+    <a href="/login/sign-up">Sign-up</a>
+  </main>
+
+<% include base/footer %>

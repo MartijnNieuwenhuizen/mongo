@@ -1,22 +1,14 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
-  <body>
-    <header>
-      <h1><%= title %></h1>
-      <p>Welcome to the <%= title %> test</p>
-    </header>
-    <main>
-      <ul>
-        <% for (var i = 0; i < data.length; i++) { %>
-            <li>
-              <p>Book: <strong><%= data[i].title %></strong>, has <strong><%= data[i].pages %></strong> pages</p>
-            </li>
-        <% } %>
-      </ul>
-    </main>
-  </body>
-</html>
+<% include base/head %>
+<% include base/header %>
+
+  <main>
+    <ul>
+      <% for (var i = 0; i < data.length; i++) { %>
+          <li>
+            <p>Book: <strong><%= data[i].title %></strong>, has <strong><%= data[i].pages %></strong> pages</p>
+          </li>
+      <% } %>
+    </ul>
+  </main>
+  
+<% include base/footer %>
