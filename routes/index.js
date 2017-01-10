@@ -1,9 +1,12 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 const monk = require('monk');
 
+const auth = require('./helpers/auth');
+
 /* GET home page. */
-router.get('/', function(req, res, next) {
+// router.get('/', auth.login, function(req, res, next) {
+router.get('/', auth.login, function(req, res, next) {
 
   const url = 'localhost:27016';
   const db = monk(url);
