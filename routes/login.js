@@ -11,21 +11,19 @@ router.get('/', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
-
+  // Data got from post
   const userEmail = req.body.email.toLowerCase();
   const userPass = req.body.password;
-  console.log(userEmail);
-  console.log(userPass);
 
+  // match the user
   const users = res.locals.users;
   const user = users.filter( machedUser => machedUser.email === userEmail);
 
-  console.log(user);
-
   // check if there's a match
   if (user.length > 0) {
-
+    // If the password matches this user
     if (user[0].pass === userPass) {
+      // set a session
       const session = req.session;
       session.view = 1;
       session.userId = user[0].userId;
