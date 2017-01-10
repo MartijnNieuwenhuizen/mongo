@@ -1,8 +1,8 @@
 const express       = require('express');
 const path          = require('path');
-const favicon       = require('serve-favicon');
+// const favicon       = require('serve-favicon');
 const logger        = require('morgan');
-const cookieParser  = require('cookie-parser');
+// const cookieParser  = require('cookie-parser');
 const bodyParser    = require('body-parser');
 const session       = require('express-session');
 
@@ -20,7 +20,7 @@ app.set('view engine', 'ejs');
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
+// app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Middleware
@@ -31,32 +31,38 @@ app.use(session({
   secret: 'E=MC2'
 }));
 
-// Temp users data
-const users = [{
-  email: 'martijnnieuwenhuizen@icloud.com',
-  pass: 'Wortels16',
-  name: {
-    first: 'Martijn',
-    last: 'Nieuwenhuizen'
-  },
-  userId: 1,
-  collectionId: '65r*8s4qj9x1'
-},{
-  email: 'test@test.com',
-  pass: 'test',
-  name: {
-    first: 'test',
-    last: 'test'
-  },
-  userId: 2,
-  collectionId: 's59f0s=7'
-}];
+// Assign temp user data to the res
+app.use((req, res, next) => {
+  // Temp users data
+  const users = [{
+    email: 'martijnnieuwenhuizen@icloud.com',
+    pass: 'Wortels16',
+    name: {
+      first: 'Martijn',
+      last: 'Nieuwenhuizen'
+    },
+    userId: 1,
+    collectionId: '65r*8s4qj9x1'
+  },{
+    email: 'test@test.com',
+    pass: 'test',
+    name: {
+      first: 'test',
+      last: 'test'
+    },
+    userId: 2,
+    collectionId: 's59f0s=7'
+  }];
+
+  res.locals.users = users;
+  next();
+});
 
 // Check auth
 app.use((req, res, next) => {
   // If there's a session and a logedin user
   if (req.session && req.session.userId) {
-    const user = users.filter( usersD => usersD.userId === req.session.userId);
+    const user = res.locals.users.filter( usersD => usersD.userId === req.session.userId);
     res.locals.user = user[0];
     next();
   } else {
