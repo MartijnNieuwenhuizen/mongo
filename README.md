@@ -3,7 +3,7 @@ This repository is for learning MongoDb and studying MongoDB.
 
 I will be documenting all my steps to show you my learing curve.
 
-# 1. Setting up NodeJS with Express
+## 1. Setting up NodeJS with Express
 I just followed the basic [Express installation guide](http://expressjs.com/en/starter/installing.html).
 
 Setup the package.json
@@ -41,7 +41,7 @@ Run the app
 $ nodemon app
 ```
 
-# 2. Installing MongoDB
+## 2. Installing MongoDB
 I've tried a lot of ways to install MondgoDB and this is the one that works form me. In other attempts I got an error that the /data/db wasn't there or didn't have the right rights. Sinds i'm not very common with file permission and things like that, I tried it in oter way's for me the magical terminal command was: ``` mongod --dbpath=/data --port 27017 ```.
 
 I used [Monk](https://automattic.github.io/monk/docs/GETTING_STARTED.html) to setup the connection with MongoDB.
