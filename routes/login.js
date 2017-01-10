@@ -23,6 +23,8 @@ router.post('/', (req, res, next) => {
   if (user.length > 0) {
     // If the password matches this user
     if (user[0].pass === userPass) {
+      console.log('CHECK: password passed');
+
       // set a session
       const session = req.session;
       session.view = 1;

@@ -126,7 +126,7 @@ Also, I must be able to add/edit the data, which means there needs to be a login
 
 This will be the steps I think I need to take.
 
-1. Make a simple session login with Middleware
+1. ~~Make a simple session login with Middleware~~
 2. Add the session login data to MongoDB
 3. Create an input form if you're logged in
 4. Store items in de MongoDB thrue the form
