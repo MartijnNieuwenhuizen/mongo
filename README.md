@@ -136,3 +136,9 @@ This will be the steps I think I need to take.
 9. Style the basic pages
 8. Style the collection items per type
 9. DONE!
+
+## 3.1 Creating a session login with Middleware
+Install express-session
+```
+$ npm install express-session --save
+```
