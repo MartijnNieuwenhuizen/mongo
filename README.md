@@ -126,7 +126,7 @@ Also, I must be able to add/edit the data, which means there needs to be a login
 
 This will be the steps I think I need to take.
 
-1. Make a simple session login with Middleware
+1. ~~Make a simple session login with Middleware~~
 2. Add the session login data to MongoDB
 3. Create an input form if you're logged in
 4. Store items in de MongoDB thrue the form
@@ -137,7 +137,7 @@ This will be the steps I think I need to take.
 8. Style the collection items per type
 9. DONE!
 
-## 3.1 Creating a session login with Middleware
+### 3.1 Creating a session login with Middleware
 Install express-session
 ```
 $ npm install express-session --save
@@ -246,3 +246,70 @@ router.post('/', (req, res, next) => {
   }
 });
 ```
+
+### 3.2 Add the session login data to MongoDB
+First i've created a User DB like this (this is replaced code)
+```
+// Assign temp user data to the res
+app.use((req, res, next) => {
+  const db = monk('localhost:27017');
+  const usersDB = db.get('users');
+```
+
+Now there's acces to the usersDB so there needs to be data in it. Because I don't know how to do that with the terminal, I did it with code like this:
+```
+const fakeData = [{
+  email: 'test@test.com',
+  pass: 'test',
+  name: {
+    first: 'test',
+    last: 'test'
+  },
+  userId: 1,
+  collectionId: 's59f0s=7'
+},{
+  email: 'test1@test.com',
+  pass: 'test1',
+  name: {
+    first: 'test1',
+    last: 'test1'
+  },
+  userId: 2,
+  collectionId: 'sq76jfg/sio'
+}];
+//
+usersDB.insert(fakeData)
+  .then(data => {
+    console.log(data);
+    res.locals.users = data;
+    next();
+  })
+  .catch(err => {
+    console.log(err);
+  })
+  .then(() => db.close());
+```
+
+Not very nice, but it did the trick. After that, just get the data everytime you do a req so the whole pease of middleware will be:
+```
+// Assign temp user data to the res
+app.use((req, res, next) => {
+  const db = monk('localhost:27017');
+  const usersDB = db.get('users');
+
+  usersDB.find({})
+    .then(data => {
+      console.log('CHECK: Found the DB');
+      res.locals.users = data;
+    })
+    .catch(err => {
+      console.log(err);
+    })
+    .then(() => {
+      db.close();
+      next();
+    });
+});
+```
+
+Now the users are pulled from your usersDB

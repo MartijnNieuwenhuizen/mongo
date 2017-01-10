@@ -5,6 +5,7 @@ const logger        = require('morgan');
 // const cookieParser  = require('cookie-parser');
 const bodyParser    = require('body-parser');
 const session       = require('express-session');
+const monk          = require('monk');
 
 const index         = require('./routes/index');
 const login         = require('./routes/login');
@@ -33,29 +34,21 @@ app.use(session({
 
 // Assign temp user data to the res
 app.use((req, res, next) => {
-  // Temp users data
-  const users = [{
-    email: 'martijnnieuwenhuizen@icloud.com',
-    pass: 'Wortels16',
-    name: {
-      first: 'Martijn',
-      last: 'Nieuwenhuizen'
-    },
-    userId: 1,
-    collectionId: '65r*8s4qj9x1'
-  },{
-    email: 'test@test.com',
-    pass: 'test',
-    name: {
-      first: 'test',
-      last: 'test'
-    },
-    userId: 2,
-    collectionId: 's59f0s=7'
-  }];
+  const db = monk('localhost:27017');
+  const usersDB = db.get('users');
 
-  res.locals.users = users;
-  next();
+  usersDB.find({})
+    .then(data => {
+      console.log('CHECK: Found the DB');
+      res.locals.users = data;
+    })
+    .catch(err => {
+      console.log(err);
+    })
+    .then(() => {
+      db.close();
+      next();
+    });
 });
 
 // Check auth

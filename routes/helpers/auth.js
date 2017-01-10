@@ -5,6 +5,7 @@ module.exports = {
       res.redirect('/login');
     } else {
       // Nothing on the hand, just continue
+      console.log('CHECK: all good, continue');
       next();
     }
   }
