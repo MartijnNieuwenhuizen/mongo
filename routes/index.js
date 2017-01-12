@@ -54,7 +54,7 @@ router.post('/', auth.login, (req, res, next) => {
           test.find({})
           .then(testData => {
             console.log('CHECK: render after post with test data');
-            res.render('index', { title: 'MongoDB Test', data: 0, test: testData });
+            res.render('index', { title: 'MongoDB Test', data: data, test: testData });
           })
           .catch(err => { console.log(err); });
         })

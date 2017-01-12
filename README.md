@@ -352,4 +352,41 @@ router.post('/', (req, res, next) => {
 or as an object and then add things to it. I'm not shure yet, I will come back to that.
 
 Now I want to PUT something in the DB if a POST is done.
-To add something i need to use **update**. 
+In my *routes/index.js* I've added this code, to insert something into the new collection and render it. In the index.ejs just loop over the new collection like you did with the prev collection
+```
+// handle the POST from the add form
+router.post('/', auth.login, (req, res, next) => {
+  const newThing = req.body;
+  console.log('CHECK: got a POST');
+
+  // make MongoDB connection
+  const db = monk('localhost:27017');
+  const collection = db.get('document');
+  const test = db.get('testCollection');
+
+  // insert POST into MongoDB
+  test.insert(newThing)
+    // If insert was succesfull
+    .then((check) => {
+      console.log('CHECK: Posted');
+
+      // get the normal collection
+      collection.find({})
+        .then(data => {
+
+          // get the test collection
+          test.find({})
+          .then(testData => {
+            console.log('CHECK: render after post with test data');
+            res.render('index', { title: 'MongoDB Test', data: data, test: testData });
+          })
+          .catch(err => { console.log(err); });
+        })
+        .catch(err => { console.log(err); });
+    })
+    .catch(err => {
+      console.log('CHECK: POST didnt work');
+      console.log(err);
+    });
+});
+```
