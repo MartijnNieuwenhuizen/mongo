@@ -5,8 +5,10 @@ const monk = require('monk');
 const auth = require('./helpers/auth');
 
 /* GET home page. */
-// router.get('/', auth.login, function(req, res, next) {
 router.get('/', auth.login, function(req, res, next) {
+  res.locals.meta = Object.assign({}, res.locals.meta, {
+    title: 'MongoDB'
+  });
 
   const url = 'localhost:27017';
   const db = monk(url);

@@ -313,3 +313,5 @@ app.use((req, res, next) => {
 ```
 
 Now the users are pulled from your usersDB
+
+### 3.3 Create an input form if you're logged in
