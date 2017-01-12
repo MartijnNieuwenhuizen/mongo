@@ -3,10 +3,11 @@
 
   <main>
     <% if (thingsData.length) { %>
-      <ul>
+      <ul class="things">
       <% for (var i = 0; i < thingsData.length; i++) { %>
-        <p><%= thingsData[i].thing %></p>
-        <p><%= thingsData[i].type %></p>
+        <li class="things--item thing" data-id="<%= thingsData[i]._id %>">
+          <p class="thing--content thing--<%= thingsData[i].type %>"><%= thingsData[i].thing %></p>
+        </li>
       <% } %>
       </ul>
     <% } %>

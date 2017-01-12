@@ -129,9 +129,9 @@ This will be the steps I think I need to take.
 1. ~~Make a simple session login with Middleware~~
 2. ~Add the session login data to MongoDB~
 3. ~Create an input form if you're logged in~
-4. Store items in de MongoDB thrue the form
-5. render the MongoDB collection
-6. Add all the data to the MongoDB collection
+4. ~Store items in de MongoDB thrue the form~
+5. ~render the MongoDB collection~
+6. ~Add all the data to the MongoDB collection~
 7. Make it possible to edit a file in the collection
 9. Style the basic pages
 8. Style the collection items per type
@@ -397,7 +397,7 @@ This is already done. Now lets remove all the dummy stuff and POST/render the re
 ### 3.6 Add all the data to the MongoDB collection
 I'm going to rewrite the *index.js* to render and POST the right data
 
-Oke, so the code is clean again and it works! The POST is now:
+Oke, so the code is clean again and it works! Check the changed code in [this commit](https://github.com/MartijnNieuwenhuizen/mongo/pull/6/commits/64d59f6f98402365ca892462af6b9ad5b45e5081). The POST is now:
 ```
 router.post('/', auth.login, (req, res, next) => {
   console.log('CHECK: got a POST');
@@ -423,3 +423,5 @@ router.post('/', auth.login, (req, res, next) => {
     .catch(err => { console.log('CHECK: POST didnt work: ', err); });
 });
 ```
+
+### 3.7 Make it possible to edit a file in the collection
