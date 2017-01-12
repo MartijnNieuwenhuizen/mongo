@@ -4,6 +4,9 @@ const monk = require('monk');
 
 const auth = require('./helpers/auth');
 
+
+
+
 /* GET home page. */
 router.get('/', auth.login, function(req, res, next) {
   // Assign meta
@@ -13,57 +16,42 @@ router.get('/', auth.login, function(req, res, next) {
 
   // DB consts
   const db = monk('localhost:27017');
-  const collection = db.get('document');
-  const test = db.get('testCollection');
+  const things = db.get('things');
 
-  collection.find({})
+  things.find({})
     .then(data => {
-
-      test.find({})
-      .then(testData => {
-        console.log('CHECK: testData Found: ');
-        res.render('index', { title: 'MongoDB Test', data: data, test: testData });
-      })
-      .catch(err => { console.log(err); });
+      res.render('index', { thingsData: data });
     })
-    .catch(err => { console.log(err); });
-    // .then(() => db.close());
+    .catch(err => { console.log(err); })
+    .then(() => db.close());
 });
+
+
+
 
 // handle the POST from the add form
 router.post('/', auth.login, (req, res, next) => {
-  const newThing = req.body;
   console.log('CHECK: got a POST');
+
+  const newThing = req.body;
 
   // make MongoDB connection
   const db = monk('localhost:27017');
-  const collection = db.get('document');
-  const test = db.get('testCollection');
+  const things = db.get('things');
 
   // insert POST into MongoDB
-  test.insert(newThing)
+  things.insert(newThing)
     // If insert was succesfull
-    .then((check) => {
+
+    .then((newThingsData) => {
       console.log('CHECK: Posted');
 
-      // get the normal collection
-      collection.find({})
-        .then(data => {
-
-          // get the test collection
-          test.find({})
-          .then(testData => {
-            console.log('CHECK: render after post with test data');
-            res.render('index', { title: 'MongoDB Test', data: data, test: testData });
-          })
-          .catch(err => { console.log(err); });
-        })
-        .catch(err => { console.log(err); });
+      things.find({})
+        .then(data => { res.render('index', { thingsData: data }); })
+        .catch(err => { console.log(err); })
+        .then(() => db.close());
     })
-    .catch(err => {
-      console.log('CHECK: POST didnt work');
-      console.log(err);
-    });
+    .catch(err => { console.log('CHECK: POST didnt work: ', err); });
 });
 
 module.exports = router;
