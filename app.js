@@ -63,6 +63,7 @@ app.use((req, res, next) => {
   }
 });
 
+// Write the info for the head for every page
 app.use((req, res, next) => {
   res.locals.meta = {
     renderTitle: (title) => `${title} | Martijn Nieuwenhuizen`,

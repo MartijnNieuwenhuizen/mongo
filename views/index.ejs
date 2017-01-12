@@ -3,12 +3,21 @@
 
   <main>
     <ul>
-      <% for (var i = 0; i < data.length; i++) { %>
+      <% if (data.length) {
+        for (var i = 0; i < data.length; i++) { %>
           <li>
             <p>Book: <strong><%= data[i].title %></strong>, has <strong><%= data[i].pages %></strong> pages</p>
           </li>
-      <% } %>
+        <% }
+      } %>
     </ul>
+
+    <% if (test.length) {
+      for (var i = 0; i < test.length; i++) { %>
+        <p><%= test[i].thing %></p>
+        <p><%= test[i].type %></p>
+      <% }
+    } %>
   </main>
 
 <% include base/footer %>

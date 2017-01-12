@@ -127,8 +127,8 @@ Also, I must be able to add/edit the data, which means there needs to be a login
 This will be the steps I think I need to take.
 
 1. ~~Make a simple session login with Middleware~~
-2. Add the session login data to MongoDB
-3. Create an input form if you're logged in
+2. ~Add the session login data to MongoDB~
+3. ~Create an input form if you're logged in~
 4. Store items in de MongoDB thrue the form
 5. render the MongoDB collection
 6. Add all the data to the MongoDB collection
@@ -315,3 +315,41 @@ app.use((req, res, next) => {
 Now the users are pulled from your usersDB
 
 ### 3.3 Create an input form if you're logged in
+In *routes/helpers/auth.js* I've added this line
+```
+// Set logedin to true
+res.locals.loggedin = true;
+```
+
+So if the auth passes, the res.locals.loggedin is set to true. In the *views/base/footer.ejs* I've checked for locals.loggedin (because in the template, there is no response).
+If *locals.loggedin* is true, show the form:
+```
+<% if (locals.loggedin) { %>
+```
+
+Now I can handle the post in the *routes/index.js*
+
+### 3.4 Store items in de MongoDB thrue the form
+Oke, so my approach is to handle the POST in the *routes/index.js*.
+First I want to check the incoming data, then store something to MongoDB if a POST is made and at last store the POST ingot to MongoDB if the POST is made.
+
+Check incoming data on the POST
+```
+// handle the POST from the add form
+router.post('/', (req, res, next) => {
+  console.log(req.body);
+});
+```
+
+Oke, this works, so I want to store the data like this:
+```
+// handle the POST from the add form
+router.post('/', (req, res, next) => {
+  const thing = req.body.thing;
+  const type = req.body.type;
+});
+```
+or as an object and then add things to it. I'm not shure yet, I will come back to that.
+
+Now I want to PUT something in the DB if a POST is done.
+To add something i need to use **update**. 

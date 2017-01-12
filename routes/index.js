@@ -13,15 +13,70 @@ router.get('/', auth.login, function(req, res, next) {
   const url = 'localhost:27017';
   const db = monk(url);
   const collection = db.get('document');
+  const test = db.get('testCollection');
 
   collection.find({})
     .then(data => {
-      res.render('index', { title: 'MongoDB Test', data: data });
+
+      test.find({})
+      .then(testData => {
+        console.log('CHECK: testData Found: ');
+        console.log(testData);
+        res.render('index', { title: 'MongoDB Test', data: data, test: testData });
+      })
+      .catch(() => {
+        console.log('CHECK: No testData Found');
+        res.render('index', { title: 'MongoDB Test', data: data, test: 0 });
+      });
     })
     .catch(err => {
       console.log(err);
     })
-    .then(() => db.close());
+    // .then(() => db.close());
+});
+
+// handle the POST from the add form
+router.post('/', auth.login, (req, res, next) => {
+  // const newThing = req.body;
+  console.log('CHECK: got a POST');
+
+  // make MongoDB connection
+  const db = monk('localhost:27017');
+  const collection = db.get('document');
+  const test = db.get('testCollection');
+
+  test.insert({
+    thing: req.body.thing,
+    type: req.body.type
+  })
+    .then((check) => {
+      console.log('CHECK: Posted');
+      console.log(check);
+
+      test.find({})
+      .then(testData => {
+        console.log('CHECK: render after post with test data');
+        console.log(testData);
+        res.render('index', { title: 'MongoDB Test', data: 0, test: testData });
+      })
+      .catch(() => {
+        console.log('CHECK: render after post without test data');
+        res.render('index', { title: 'MongoDB Test', data: 0, test: 0 });
+      });
+
+      // collection.find({})
+      //   .then(data => {
+      //
+      //   })
+      //   .catch(err => {
+      //     console.log(err);
+      //   })
+      //   .then(() => db.close());
+    })
+    .catch(err => {
+      console.log('CHECK: POST didnt work');
+      console.log(err);
+    });
 });
 
 module.exports = router;
