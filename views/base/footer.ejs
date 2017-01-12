@@ -1,2 +1,23 @@
+<% if (locals.loggedin) { %>
+  <section class="add">
+      <form class="add--form" action="/" method="post">
+        <label class="add--label" for="thing">Your Thing of the day</label>
+        <input class="add--input" id="thing" type="text" name="thing" value="">
+
+        <label class="add--label" for="type">Type</label>
+        <div class="add--select-container">
+          <select class="add--select" id="type" class="" name="type">
+            <option value="code">Code</option>
+            <option value="quote">Quote</option>
+          </select>
+        </div>
+
+        <button class="add--submit" type="submit">Add</button>
+      </form>
+  </section>
+<% } %>
+  <footer>
+
+  </footer>
 </body>
 </html>

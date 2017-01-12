@@ -1,7 +1,14 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <% let title;
+    if(meta.title) {
+      title = meta.renderTitle(meta.title)
+    } else {
+      title = meta.defaultTitle
+    } %>
     <title><%= title %></title>
+    
     <link rel='stylesheet' href='/stylesheets/style.css' />
   </head>
   <body>
