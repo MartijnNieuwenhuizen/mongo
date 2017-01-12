@@ -2,22 +2,14 @@
 <% include base/header %>
 
   <main>
-    <ul>
-      <% if (data.length) {
-        for (var i = 0; i < data.length; i++) { %>
-          <li>
-            <p>Book: <strong><%= data[i].title %></strong>, has <strong><%= data[i].pages %></strong> pages</p>
-          </li>
-        <% }
-      } %>
-    </ul>
-
-    <% if (test.length) {
-      for (var i = 0; i < test.length; i++) { %>
-        <p><%= test[i].thing %></p>
-        <p><%= test[i].type %></p>
-      <% }
-    } %>
+    <% if (thingsData.length) { %>
+      <ul>
+      <% for (var i = 0; i < thingsData.length; i++) { %>
+        <p><%= thingsData[i].thing %></p>
+        <p><%= thingsData[i].type %></p>
+      <% } %>
+      </ul>
+    <% } %>
   </main>
 
 <% include base/footer %>

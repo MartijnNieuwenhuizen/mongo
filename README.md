@@ -390,3 +390,36 @@ router.post('/', auth.login, (req, res, next) => {
     });
 });
 ```
+
+### 3.5 render the MongoDB collection
+This is already done. Now lets remove all the dummy stuff and POST/render the real things
+
+### 3.6 Add all the data to the MongoDB collection
+I'm going to rewrite the *index.js* to render and POST the right data
+
+Oke, so the code is clean again and it works! The POST is now:
+```
+router.post('/', auth.login, (req, res, next) => {
+  console.log('CHECK: got a POST');
+
+  const newThing = req.body;
+
+  // make MongoDB connection
+  const db = monk('localhost:27017');
+  const things = db.get('things');
+
+  // insert POST into MongoDB
+  things.insert(newThing)
+    // If insert was succesfull
+
+    .then((newThingsData) => {
+      console.log('CHECK: Posted');
+
+      things.find({})
+        .then(data => { res.render('index', { thingsData: data }); })
+        .catch(err => { console.log(err); })
+        .then(() => db.close());
+    })
+    .catch(err => { console.log('CHECK: POST didnt work: ', err); });
+});
+```
