@@ -127,11 +127,11 @@ Also, I must be able to add/edit the data, which means there needs to be a login
 This will be the steps I think I need to take.
 
 1. ~~Make a simple session login with Middleware~~
-2. ~Add the session login data to MongoDB~
-3. ~Create an input form if you're logged in~
-4. ~Store items in de MongoDB thrue the form~
-5. ~render the MongoDB collection~
-6. ~Add all the data to the MongoDB collection~
+2. ~~Add the session login data to MongoDB~~
+3. ~~Create an input form if you're logged in~~
+4. ~~Store items in de MongoDB thrue the form~~
+5. ~~render the MongoDB collection~~
+6. ~~Add all the data to the MongoDB collection~~
 7. Make it possible to edit a file in the collection
 9. Style the basic pages
 8. Style the collection items per type
