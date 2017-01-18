@@ -9,6 +9,7 @@ const monk          = require('monk');
 
 const index         = require('./routes/index');
 const login         = require('./routes/login');
+const thing         = require('./routes/thing');
 
 const app = express();
 
@@ -76,6 +77,7 @@ app.use((req, res, next) => {
 // Routes
 app.use('/', index);
 app.use('/login', login);
+app.use('/thing', thing);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

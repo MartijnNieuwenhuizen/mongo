@@ -127,12 +127,12 @@ Also, I must be able to add/edit the data, which means there needs to be a login
 This will be the steps I think I need to take.
 
 1. ~~Make a simple session login with Middleware~~
-2. ~Add the session login data to MongoDB~
-3. ~Create an input form if you're logged in~
-4. Store items in de MongoDB thrue the form
-5. render the MongoDB collection
-6. Add all the data to the MongoDB collection
-7. Make it possible to edit a file in the collection
+2. ~~Add the session login data to MongoDB~~
+3. ~~Create an input form if you're logged in~~
+4. ~~Store items in de MongoDB thrue the form~~
+5. ~~render the MongoDB collection~~
+6. ~~Add all the data to the MongoDB collection~~
+7. ~~Make it possible to edit a file in the collection~~
 9. Style the basic pages
 8. Style the collection items per type
 9. DONE!
@@ -397,7 +397,7 @@ This is already done. Now lets remove all the dummy stuff and POST/render the re
 ### 3.6 Add all the data to the MongoDB collection
 I'm going to rewrite the *index.js* to render and POST the right data
 
-Oke, so the code is clean again and it works! The POST is now:
+Oke, so the code is clean again and it works! Check the changed code in [this commit](https://github.com/MartijnNieuwenhuizen/mongo/pull/6/commits/64d59f6f98402365ca892462af6b9ad5b45e5081). The POST is now:
 ```
 router.post('/', auth.login, (req, res, next) => {
   console.log('CHECK: got a POST');
@@ -423,3 +423,89 @@ router.post('/', auth.login, (req, res, next) => {
     .catch(err => { console.log('CHECK: POST didnt work: ', err); });
 });
 ```
+
+### 3.7 Make it possible to edit a file in the collection
+It needs to be possible to edit your input.
+
+I've desided to use an basic solution without a fancy client side solution.
+On the *views/index.ejs* I made an if statement to add a link to every list item if the user is loggedin.
+
+```
+    <% if ( loggedin === true ) { %>
+```
+
+The link contains a **href** like ``` href="/thing?id=<%= thingsData[i]._id %>" ``` so it contains the unique id of an element in the query. I can get this query with Node by getting ``` const thingId = req.query.id; ```
+
+
+
+In the */routes/thing.js*, where I will handle the Req en POSTS to */routes*, I used basicely the same code as I used in */routes/index.js* to get the data from MongoDB, but now replaced
+
+```
+things.find({})
+```
+
+with
+
+```
+things.findOne({_id: thingId})
+```
+
+Now I have the data from the item I want to edit.
+
+#### Using one form for two POSTS
+For the POST to replace the item, I need to use the same exact form as I used to add one, but now I want all the data already filled in. So thing means the HTML is exactly the same, therefor, I desided to use exactly the same form.
+
+All I have to do is add the data if there's data send from the server.
+This is the code to use one form for two different actions, who require exactly the same HTML
+
+```
+<%
+  var post = "/";
+  if (locals.loggedin && loggedin === true) {
+    if ( locals.data ) { post = "/thing?id=" + data._id }
+%>
+  <section class="add">
+      <form class="add--form" action=<%= post %> method="post">
+        <label class="add--label" for="thing">Your Thing of the day</label>
+        <textarea class="add--input" id="thing" type="text" name="thing" rows="8" cols="80"><% if (locals.data) { %><%= data.thing %><% } %></textarea>
+        <label class="add--label" for="type">Type</label>
+        <div class="add--select-container">
+          <select class="add--select" id="type" class="" name="type">
+            <option <% if ( locals.data && data.type === "code" ) { %> selected <% } %> value="code">Code</option>
+            <option <% if ( locals.data && data.type === "quote" ) { %> selected <% } %> value="quote">Quote</option>
+            <option <% if ( locals.data && data.type === "idea" ) { %> selected <% } %> value="idea">Idea</option>
+            <option <% if ( locals.data && data.type === "taught" ) { %> selected <% } %> value="taught">Taught</option>
+          </select>
+        </div>
+
+        <button class="add--submit" type="submit"><% if ( locals.data ) { %>Replace<% } else { %>Add<% } %></button>
+      </form>
+  </section>
+<% } %>
+```
+
+To handle the POST and replace it, you will just need this bit of code:
+
+```
+router.post('/', auth.login, (req, res, next) => {
+  console.log('CHECK: got a POST in "/thing"');
+
+  const newThing = req.body;
+  const thingId = req.query.id;
+
+  // make MongoDB connection
+  const db = monk('localhost:27017');
+  const things = db.get('things');
+
+  // Edit POST in MongoDB
+  things.findOneAndUpdate({_id: thingId}, newThing)
+    .then((updatedThing) => {
+      res.redirect('/');
+    })
+    .catch(err => { console.log(err); });
+});
+```
+
+**Important is, that the req.query on a post is the action from the form. So the id in the query needs to be in the action url!**
+
+In the POST handler, you will find a object with the known id and update the values you want to change.

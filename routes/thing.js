@@ -4,54 +4,44 @@ const monk = require('monk');
 
 const auth = require('./helpers/auth');
 
-
-
-
-/* GET home page. */
 router.get('/', auth.login, (req, res, next) => {
   // Assign meta
   res.locals.meta = Object.assign({}, res.locals.meta, {
-    title: 'MongoDB'
+    title: 'Edit a thing'
   });
 
-  // DB consts
+  const thingId = req.query.id;
+
+  // Get the post with the same id from MongoDB
   const db = monk('localhost:27017');
   const things = db.get('things');
 
-  things.find({})
+  things.findOne({_id: thingId})
     .then(data => {
-      res.render('index', { thingsData: data });
+      console.log(data);
+      res.render('thing', { data: data });
     })
     .catch(err => { console.log(err); })
     .then(() => db.close());
+
 });
 
-
-
-
-// handle the POST from the add form
 router.post('/', auth.login, (req, res, next) => {
-  console.log('CHECK: got a POST');
+  console.log('CHECK: got a POST in "/thing"');
 
   const newThing = req.body;
+  const thingId = req.query.id;
 
   // make MongoDB connection
   const db = monk('localhost:27017');
   const things = db.get('things');
 
-  // insert POST into MongoDB
-  things.insert(newThing)
-    // If insert was succesfull
-
-    .then((newThingsData) => {
-      console.log('CHECK: Posted');
-
-      things.find({})
-        .then(data => { res.render('index', { thingsData: data }); })
-        .catch(err => { console.log(err); })
-        .then(() => db.close());
+  // Edit POST in MongoDB
+  things.findOneAndUpdate({_id: thingId}, newThing)
+    .then((updatedThing) => {
+      res.redirect('/');
     })
-    .catch(err => { console.log('CHECK: POST didnt work: ', err); });
+    .catch(err => { console.log(err); });
 });
 
 module.exports = router;
