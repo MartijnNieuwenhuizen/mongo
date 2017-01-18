@@ -1,0 +1,27 @@
+<%
+  var post = "/";
+  if (loggedin === true) {
+    if ( locals.data ) { post = "/thing" }
+%>
+  <section class="add">
+      <form class="add--form" action=<%= post %> method="post">
+        <label class="add--label" for="thing">Your Thing of the day</label>
+        <textarea class="add--input" id="thing" type="text" name="thing" rows="8" cols="80"><% if (locals.data) { %><%= data.thing %><% } %></textarea>
+        <label class="add--label" for="type">Type</label>
+        <div class="add--select-container">
+          <select class="add--select" id="type" class="" name="type">
+            <option <% if ( locals.data && data.type === "code" ) { %> <%= selected %> <% } %> value="code">Code</option>
+            <option <% if ( locals.data && data.type === "quote" ) { %> <%= selected %> <% } %> value="quote">Quote</option>
+            <option <% if ( locals.data && data.type === "idea" ) { %> <%= selected %> <% } %> value="idea">Idea</option>
+            <option <% if ( locals.data && data.type === "taught" ) { %> <%= selected %> <% } %> value="taught">Taught</option>
+          </select>
+        </div>
+
+        <% if ( locals.data ) { %>
+          <button class="add--submit" type="submit">Replace</button>
+        <% } else { %>
+          <button class="add--submit" type="submit">Add</button>
+        <% } %>
+      </form>
+  </section>
+<% } %>

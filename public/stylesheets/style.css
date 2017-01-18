@@ -6,3 +6,23 @@ body {
 a {
   color: #00B7FF;
 }
+
+.thing--link {
+  position: relative;
+}
+.thing--link:hover {
+  cursor: pointer;
+  text-decoration: underline;
+  color: tomato;
+}
+.thing--link:hover::after {
+  content: "Edit";
+
+  position: absolute;
+  top: 0%; right: -4rem;
+
+  padding: .3rem .7rem;
+
+  background-color: tomato;
+  color: white;
+}
