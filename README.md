@@ -132,7 +132,7 @@ This will be the steps I think I need to take.
 4. ~~Store items in de MongoDB thrue the form~~
 5. ~~render the MongoDB collection~~
 6. ~~Add all the data to the MongoDB collection~~
-7. Make it possible to edit a file in the collection
+7. ~~Make it possible to edit a file in the collection~~
 9. Style the basic pages
 8. Style the collection items per type
 9. DONE!
@@ -461,8 +461,8 @@ This is the code to use one form for two different actions, who require exactly 
 ```
 <%
   var post = "/";
-  if (loggedin === true) {
-    if ( locals.data ) { post = "/thing" }
+  if (locals.loggedin && loggedin === true) {
+    if ( locals.data ) { post = "/thing?id=" + data._id }
 %>
   <section class="add">
       <form class="add--form" action=<%= post %> method="post">
@@ -471,10 +471,10 @@ This is the code to use one form for two different actions, who require exactly 
         <label class="add--label" for="type">Type</label>
         <div class="add--select-container">
           <select class="add--select" id="type" class="" name="type">
-            <option <% if ( locals.data && data.type === "code" ) { %> <%= selected %> <% } %> value="code">Code</option>
-            <option <% if ( locals.data && data.type === "quote" ) { %> <%= selected %> <% } %> value="quote">Quote</option>
-            <option <% if ( locals.data && data.type === "idea" ) { %> <%= selected %> <% } %> value="idea">Idea</option>
-            <option <% if ( locals.data && data.type === "taught" ) { %> <%= selected %> <% } %> value="taught">Taught</option>
+            <option <% if ( locals.data && data.type === "code" ) { %> selected <% } %> value="code">Code</option>
+            <option <% if ( locals.data && data.type === "quote" ) { %> selected <% } %> value="quote">Quote</option>
+            <option <% if ( locals.data && data.type === "idea" ) { %> selected <% } %> value="idea">Idea</option>
+            <option <% if ( locals.data && data.type === "taught" ) { %> selected <% } %> value="taught">Taught</option>
           </select>
         </div>
 
@@ -483,3 +483,29 @@ This is the code to use one form for two different actions, who require exactly 
   </section>
 <% } %>
 ```
+
+To handle the POST and replace it, you will just need this bit of code:
+
+```
+router.post('/', auth.login, (req, res, next) => {
+  console.log('CHECK: got a POST in "/thing"');
+
+  const newThing = req.body;
+  const thingId = req.query.id;
+
+  // make MongoDB connection
+  const db = monk('localhost:27017');
+  const things = db.get('things');
+
+  // Edit POST in MongoDB
+  things.findOneAndUpdate({_id: thingId}, newThing)
+    .then((updatedThing) => {
+      res.redirect('/');
+    })
+    .catch(err => { console.log(err); });
+});
+```
+
+**Important is, that the req.query on a post is the action from the form. So the id in the query needs to be in the action url!**
+
+In the POST handler, you will find a object with the known id and update the values you want to change.

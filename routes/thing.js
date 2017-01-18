@@ -4,7 +4,6 @@ const monk = require('monk');
 
 const auth = require('./helpers/auth');
 
-/* GET home page. */
 router.get('/', auth.login, (req, res, next) => {
   // Assign meta
   res.locals.meta = Object.assign({}, res.locals.meta, {
@@ -19,6 +18,7 @@ router.get('/', auth.login, (req, res, next) => {
 
   things.findOne({_id: thingId})
     .then(data => {
+      console.log(data);
       res.render('thing', { data: data });
     })
     .catch(err => { console.log(err); })
@@ -27,7 +27,21 @@ router.get('/', auth.login, (req, res, next) => {
 });
 
 router.post('/', auth.login, (req, res, next) => {
+  console.log('CHECK: got a POST in "/thing"');
 
+  const newThing = req.body;
+  const thingId = req.query.id;
+
+  // make MongoDB connection
+  const db = monk('localhost:27017');
+  const things = db.get('things');
+
+  // Edit POST in MongoDB
+  things.findOneAndUpdate({_id: thingId}, newThing)
+    .then((updatedThing) => {
+      res.redirect('/');
+    })
+    .catch(err => { console.log(err); });
 });
 
 module.exports = router;
