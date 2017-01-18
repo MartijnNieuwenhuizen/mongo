@@ -1,5 +1,5 @@
 module.exports = {
-  login: function(req, res, next) {
+  login: (req, res, next) => {
     if (req.session && !req.session.userId) {
       // If there's no SessionID (so no logged in user), rederect
       res.redirect('/login');

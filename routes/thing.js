@@ -5,7 +5,7 @@ const monk = require('monk');
 const auth = require('./helpers/auth');
 
 /* GET home page. */
-router.get('/', auth.login, function(req, res, next) {
+router.get('/', auth.login, (req, res, next) => {
   // Assign meta
   res.locals.meta = Object.assign({}, res.locals.meta, {
     title: 'Edit a thing'
@@ -23,6 +23,10 @@ router.get('/', auth.login, function(req, res, next) {
     })
     .catch(err => { console.log(err); })
     .then(() => db.close());
+
+});
+
+router.post('/', auth.login, (req, res, next) => {
 
 });
 
