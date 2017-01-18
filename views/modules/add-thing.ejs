@@ -17,11 +17,7 @@
           </select>
         </div>
 
-        <% if ( locals.data ) { %>
-          <button class="add--submit" type="submit">Replace</button>
-        <% } else { %>
-          <button class="add--submit" type="submit">Add</button>
-        <% } %>
+        <button class="add--submit" type="submit"><% if ( locals.data ) { %>Replace<% } else { %>Add<% } %></button>
       </form>
   </section>
 <% } %>

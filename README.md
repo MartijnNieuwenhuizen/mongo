@@ -425,3 +425,61 @@ router.post('/', auth.login, (req, res, next) => {
 ```
 
 ### 3.7 Make it possible to edit a file in the collection
+It needs to be possible to edit your input.
+
+I've desided to use an basic solution without a fancy client side solution.
+On the *views/index.ejs* I made an if statement to add a link to every list item if the user is loggedin.
+
+```
+    <% if ( loggedin === true ) { %>
+```
+
+The link contains a **href** like ``` href="/thing?id=<%= thingsData[i]._id %>" ``` so it contains the unique id of an element in the query. I can get this query with Node by getting ``` const thingId = req.query.id; ```
+
+
+
+In the */routes/thing.js*, where I will handle the Req en POSTS to */routes*, I used basicely the same code as I used in */routes/index.js* to get the data from MongoDB, but now replaced
+
+```
+things.find({})
+```
+
+with
+
+```
+things.findOne({_id: thingId})
+```
+
+Now I have the data from the item I want to edit.
+
+#### Using one form for two POSTS
+For the POST to replace the item, I need to use the same exact form as I used to add one, but now I want all the data already filled in. So thing means the HTML is exactly the same, therefor, I desided to use exactly the same form.
+
+All I have to do is add the data if there's data send from the server.
+This is the code to use one form for two different actions, who require exactly the same HTML
+
+```
+<%
+  var post = "/";
+  if (loggedin === true) {
+    if ( locals.data ) { post = "/thing" }
+%>
+  <section class="add">
+      <form class="add--form" action=<%= post %> method="post">
+        <label class="add--label" for="thing">Your Thing of the day</label>
+        <textarea class="add--input" id="thing" type="text" name="thing" rows="8" cols="80"><% if (locals.data) { %><%= data.thing %><% } %></textarea>
+        <label class="add--label" for="type">Type</label>
+        <div class="add--select-container">
+          <select class="add--select" id="type" class="" name="type">
+            <option <% if ( locals.data && data.type === "code" ) { %> <%= selected %> <% } %> value="code">Code</option>
+            <option <% if ( locals.data && data.type === "quote" ) { %> <%= selected %> <% } %> value="quote">Quote</option>
+            <option <% if ( locals.data && data.type === "idea" ) { %> <%= selected %> <% } %> value="idea">Idea</option>
+            <option <% if ( locals.data && data.type === "taught" ) { %> <%= selected %> <% } %> value="taught">Taught</option>
+          </select>
+        </div>
+
+        <button class="add--submit" type="submit"><% if ( locals.data ) { %>Replace<% } else { %>Add<% } %></button>
+      </form>
+  </section>
+<% } %>
+```

@@ -6,7 +6,7 @@
       <ul class="things">
       <% for (var i = 0; i < thingsData.length; i++) { %>
         <li class="things--item thing">
-        <% if (loggedin === true) { %>
+        <% if ( loggedin === true ) { %>
           <a href="/thing?id=<%= thingsData[i]._id %>" class="thing--link thing--<%= thingsData[i].type %>"><%= thingsData[i].thing %></a>
         <% } else { %>
           <p class="thing--content thing--<%= thingsData[i].type %>"><%= thingsData[i].thing %></p>
